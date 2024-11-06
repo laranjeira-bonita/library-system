@@ -16,3 +16,18 @@ end
     )
 end
 
+Rental.create(
+    book_id: Book.first.id,
+    user_id: User.first.id,
+    start_date: Date.today,
+    end_date: 10.days.from_now
+)
+
+Rental.create(
+    book_id: Book.last.id,
+    user_id: User.last.id,
+    start_date: Date.today,
+    end_date: 2.days.from_now
+)
+
+
