@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   post '/pay', to: 'rentals#pay'
   post '/return', to: 'rentals#return'
   post '/complete', to: 'rentals#complete'
+
+  root 'books#index'
 end
