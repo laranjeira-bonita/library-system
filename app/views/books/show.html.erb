@@ -1,0 +1,43 @@
+<%= @book.title %>
+<%= @book.synopsis %>
+<%= @book.price_per_day %>
+  
+<%= button_to 'Delete', book_path(@book), method: :delete, data: { confirm: 'Are you sure you want to delete this book?' }, class: 'delete-button' %>
+  
+<button onclick="toggleEditForm(<%= @book.id %>)" class="edit-button">Edit</button>
+
+<div id="edit-form-<%= @book.id %>" style="display: none;">
+  <%= form_with(model: @book, url: book_path(@book), method: :patch, local: true) do |f| %>
+    <div>
+      <%= f.label :title %>
+      <%= f.text_field :title %>
+    </div>
+    <div>
+      <%= f.label :price_per_day %>
+      <%= f.number_field :price_per_day, step: 0.01, min: 0, value: f.object.price_per_day || 0.0 %>
+    </div>
+    <div>
+      <%= f.label :synopsis %>
+      <%= f.text_field :synopsis %>
+    </div>
+    <div>
+      <%= f.label :price_per_day %>
+      <%= f.number_field :price_per_day, step: 0.01, min: 0, value: f.object.price_per_day || 0.0 %>
+    </div>
+    <div>
+      <%= f.submit 'Save Changes', class: 'save-button' %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  function toggleEditForm(bookId) {
+    const form = document.getElementById(`edit-form-${bookId}`);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function toggleNewForm() {
+    const newForm = document.getElementById('new-book-form');
+    newForm.style.display = newForm.style.display === 'none' ? 'block' : 'none';
+  }
+</script>

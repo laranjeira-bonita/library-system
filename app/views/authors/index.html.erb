@@ -1,0 +1,57 @@
+<% @authors.each do |author| %>
+  <div>
+    <%= author.name %>
+    <%= author.biography %>
+
+    <%= button_to 'Delete', author_path(author), method: :delete, data: { confirm: 'Are you sure you want to delete this author?' }, class: 'delete-button' %>
+
+    <button onclick="toggleEditForm(<%= author.id %>)" class="edit-button">Edit</button>
+
+    <%= link_to 'Show', author_path(author), class: 'show-button' %>
+    <div id="edit-form-<%= author.id %>" style="display: none;">
+      <%= form_with(model: author, url: author_path(author), method: :patch, local: true) do |f| %>
+        <div>
+          <%= f.label :name %>
+          <%= f.text_field :name %>
+        </div>
+        <div>
+          <%= f.label :biography %>
+          <%= f.text_field :biography %>
+        </div>
+        <div>
+          <%= f.submit 'Save Changes', class: 'save-button' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<button onclick="toggleNewForm()" class="new-button">New</button>
+
+<div id="new-author-form" style="display: none;">
+  <%= form_with(model: Author.new, url: authors_path, local: true) do |f| %>
+    <div>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+    <div>
+      <%= f.label :biography %>
+      <%= f.text_field :biography %>
+    </div>
+    <div>
+      <%= f.submit 'Create Author', class: 'create-button' %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  function toggleEditForm(authorId) {
+    const form = document.getElementById(`edit-form-${authorId}`);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function toggleNewForm() {
+    const newForm = document.getElementById('new-author-form');
+    newForm.style.display = newForm.style.display === 'none' ? 'block' : 'none';
+  }
+</script>

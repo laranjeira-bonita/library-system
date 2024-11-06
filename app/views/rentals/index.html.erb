@@ -1,0 +1,71 @@
+<% @rentals.each do |rental| %>
+  <div>
+    <%= rental.user.name %>
+    <%= rental.book.title %>
+    <%= rental.start_date %> ~ <%= rental.end_date %> <%= rental.status %> <% if rental.price&.positive? %>Debt: <%= rental.price %><% end %>
+
+    <%= button_to 'Delete', rental_path(rental), method: :delete, data: { confirm: 'Are you sure you want to delete this rental?' }, class: 'delete-button' %>
+
+    <button onclick="toggleEditForm(<%= rental.id %>)" class="edit-button">Edit</button>
+    <% if rental.processing? %>
+      <%= button_to 'Pay', pay_path(id: rental.id), method: :post, class: 'pay-button' %>
+    <% end %>
+
+    <% if rental.rent_out? %>
+      <%= button_to 'Return', return_path(id: rental.id), method: :post, class: 'pay-button' %>
+    <% end %>
+
+    <% if rental.returned? %>
+      <%= button_to 'Complete', complete_path(id: rental.id), method: :post, class: 'pay-button' %>
+    <% end %>
+    <div id="edit-form-<%= rental.id %>" style="display: none;">
+      <%= form_with(model: rental, url: rental_path(rental), method: :patch, local: true) do |f| %>
+        <div>
+          <%= f.label :end_date %>
+          <%= f.date_field :end_date %>
+        </div>
+        <div>
+          <%= f.submit 'Save Changes', class: 'save-button' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<button onclick="toggleNewForm()" class="new-button">New</button>
+
+<div id="new-rental-form" style="display: none;">
+  <%= form_with(model: Rental.new, url: rentals_path, local: true) do |f| %>
+    <div>
+      <%= f.label :start_date %>
+      <%= f.date_field :start_date, value: Time.current %>
+    </div>
+    <div>
+      <%= f.label :end_date %>
+      <%= f.date_field :end_date %>
+    </div>
+    <div>
+      <%= f.label :user_id, "User" %>
+      <%= f.collection_select :user_id, @users, :id, :name, prompt: "Select an User" %>
+    </div>
+    <div>
+      <%= f.label :book_id, "Book" %>
+      <%= f.collection_select :book_id, @books, :id, :title, prompt: "Select a Book" %>
+    </div>
+    <div>
+      <%= f.submit 'Create Rental', class: 'create-button' %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  function toggleEditForm(rentalId) {
+    const form = document.getElementById(`edit-form-${rentalId}`);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function toggleNewForm() {
+    const newForm = document.getElementById('new-rental-form');
+    newForm.style.display = newForm.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
